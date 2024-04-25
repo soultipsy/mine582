@@ -1,7 +1,9 @@
 #include "usb_main.h"
 #include "usb_interface.h"
 #include "keycode_config.h"
+#include "usb_device_state.h"
 #include "suspend.h"
+#include "rgb_led.h"
 
 static uint8_t usbTaskId = INVALID_TASK_ID;
 extern void suspend_power_down_quantum();
@@ -17,10 +19,11 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
 #endif
 
 #if !defined(NO_USB_STARTUP_CHECK)
-        if (R8_USB_MIS_ST & RB_UMS_SUSPEND) {
-            while (R8_USB_MIS_ST & RB_UMS_SUSPEND) {
+        if (usb_device_state == USB_DEVICE_STATE_SUSPEND) {
+            while (usb_device_state == USB_DEVICE_STATE_SUSPEND) {
                 /* Do this in the suspended state */
                 suspend_power_down_quantum();
+                rgbled_power_off();
                 /* Remote wakeup */
                 if (suspend_wakeup_condition()) {
                     while (!usb_remote_wakeup()) {
