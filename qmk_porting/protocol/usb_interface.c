@@ -137,31 +137,6 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
-#if defined ESB_ENABLE && ESB_ENABLE == 2
-__HIGH_CODE
-#endif
-static inline bool usb_remote_wakeup()
-{
-    if (!(R8_USB_MIS_ST & RB_UMS_SUSPEND)) {
-        return true;
-    }
-
-    R16_PIN_ANALOG_IE &= ~RB_PIN_USB_DP_PU;
-    R8_UDEV_CTRL |= RB_UD_LOW_SPEED;
-    DelayMs(2);
-    R8_UDEV_CTRL &= ~RB_UD_LOW_SPEED;
-    R16_PIN_ANALOG_IE |= RB_PIN_USB_DP_PU;
-
-    uint16_t timeout_timer = timer_read();
-
-    while (R8_USB_MIS_ST & RB_UMS_SUSPEND) {
-        if ((timer_elapsed(timeout_timer) > 2)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 void usbd_configure_done_callback()
 {
     usbd_ep_start_read(KBD_OUT_EP, kbd_out_buffer, KBD_OUT_EP_SIZE);
@@ -479,6 +454,31 @@ void usbd_event_handler(uint8_t event)
         default:
             break;
     }
+}
+
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
+bool usb_remote_wakeup()
+{
+    if (!(R8_USB_MIS_ST & RB_UMS_SUSPEND)) {
+        return true;
+    }
+
+    R16_PIN_ANALOG_IE &= ~RB_PIN_USB_DP_PU;
+    R8_UDEV_CTRL |= RB_UD_LOW_SPEED;
+    DelayMs(2);
+    R8_UDEV_CTRL &= ~RB_UD_LOW_SPEED;
+    R16_PIN_ANALOG_IE |= RB_PIN_USB_DP_PU;
+
+    uint16_t timeout_timer = timer_read();
+
+    while (R8_USB_MIS_ST & RB_UMS_SUSPEND) {
+        if ((timer_elapsed(timeout_timer) > 2)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 #if defined ESB_ENABLE && ESB_ENABLE == 2

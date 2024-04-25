@@ -89,6 +89,7 @@ enum {
 #define USBD_LANGID_STRING 0x0409
 
 void init_usb_driver();
+bool usb_remote_wakeup();
 bool hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len);
 void hid_keyboard_send_last_bios_report();
 void raw_hid_send(uint8_t *data, uint8_t length);
