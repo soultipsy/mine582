@@ -19,8 +19,11 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
 #endif
 
 #if !defined(NO_USB_STARTUP_CHECK)
-        if (usb_device_state == USB_DEVICE_STATE_SUSPEND) {
-            while (usb_device_state == USB_DEVICE_STATE_SUSPEND) {
+        static bool suspended = false;
+
+        do {
+            if (usb_device_state == USB_DEVICE_STATE_SUSPEND) {
+                suspended = true;
                 /* Do this in the suspended state */
                 suspend_power_down_quantum();
                 rgbled_power_off();
@@ -31,7 +34,12 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
                     }
                     break;
                 }
+                goto exit_usb_run_qmk_task_evt;
             }
+        } while (0);
+
+        if (suspended) {
+            suspended = false;
             suspend_wakeup_init_quantum();
         }
 #endif
@@ -46,6 +54,8 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
             mcu_reset();
         }
 #endif
+
+    exit_usb_run_qmk_task_evt:
         tmos_start_task(task_id, USB_RUN_QMK_TASK_EVT, 0);
 
         return (events ^ USB_RUN_QMK_TASK_EVT);
