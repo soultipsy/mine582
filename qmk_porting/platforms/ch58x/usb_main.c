@@ -4,13 +4,11 @@
 #include "usb_device_state.h"
 #include "suspend.h"
 #include "rgb_led.h"
+#include "protocol_supplement.h"
 
 static uint8_t usbTaskId = INVALID_TASK_ID;
 extern void suspend_power_down_quantum();
 extern void suspend_wakeup_init_quantum();
-extern void protocol_pre_task();
-extern void protocol_keyboard_task();
-extern void protocol_post_task();
 
 static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
 {
@@ -47,35 +45,7 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
         }
 #endif
 
-        {
-            protocol_pre_task();
-            protocol_keyboard_task();
-            protocol_post_task();
-
-            // #ifdef RAW_ENABLE
-            //             void raw_hid_task(void);
-            //             raw_hid_task();
-            // #endif
-
-#ifdef CONSOLE_ENABLE
-            void console_task(void);
-            console_task();
-#endif
-
-#ifdef QUANTUM_PAINTER_ENABLE
-            // Run Quantum Painter task
-            void qp_internal_task(void);
-            qp_internal_task();
-#endif
-
-#ifdef DEFERRED_EXEC_ENABLE
-            // Run deferred executions
-            void deferred_exec_task(void);
-            deferred_exec_task();
-#endif // DEFERRED_EXEC_ENABLE
-
-            housekeeping_task();
-        }
+        run_qmk_task();
 
         keyboard_check_protocol_mode();
 #ifdef POWER_DETECT_PIN
