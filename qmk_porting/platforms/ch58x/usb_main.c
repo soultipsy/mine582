@@ -8,6 +8,9 @@
 static uint8_t usbTaskId = INVALID_TASK_ID;
 extern void suspend_power_down_quantum();
 extern void suspend_wakeup_init_quantum();
+extern void protocol_pre_task();
+extern void protocol_keyboard_task();
+extern void protocol_post_task();
 
 static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
 {
@@ -44,9 +47,37 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
         }
 #endif
 
-        keyboard_task();
+        {
+            protocol_pre_task();
+            protocol_keyboard_task();
+            protocol_post_task();
+
+            // #ifdef RAW_ENABLE
+            //             void raw_hid_task(void);
+            //             raw_hid_task();
+            // #endif
+
+#ifdef CONSOLE_ENABLE
+            void console_task(void);
+            console_task();
+#endif
+
+#ifdef QUANTUM_PAINTER_ENABLE
+            // Run Quantum Painter task
+            void qp_internal_task(void);
+            qp_internal_task();
+#endif
+
+#ifdef DEFERRED_EXEC_ENABLE
+            // Run deferred executions
+            void deferred_exec_task(void);
+            deferred_exec_task();
+#endif // DEFERRED_EXEC_ENABLE
+
+            housekeeping_task();
+        }
+
         keyboard_check_protocol_mode();
-        housekeeping_task();
 #ifdef POWER_DETECT_PIN
         if (!gpio_read_pin(POWER_DETECT_PIN)) {
             // cable removed
@@ -60,6 +91,7 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
 
         return (events ^ USB_RUN_QMK_TASK_EVT);
     }
+
     if (events & USB_PERIODICAL_BIOS_REPORT_EVT) {
 #ifdef NKRO_ENABLE
         if (!keymap_config.nkro && keyboard_idle && keyboard_protocol) {
@@ -70,6 +102,7 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
             usb_start_periodical_bios_report();
         }
     }
+
     return 0;
 }
 

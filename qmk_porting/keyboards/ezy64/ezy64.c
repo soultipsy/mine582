@@ -151,7 +151,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 int main()
 {
     extern void protocol_setup();
-    extern void protocol_task();
+    extern void protocol_pre_init();
+    extern void protocol_post_init();
+    extern void platform_run();
 
     platform_setup();
 
@@ -166,7 +168,7 @@ int main()
 
     /* Main loop */
     for (;;) {
-        protocol_task();
+        platform_run();
         //! housekeeping_task() is handled by platform
     }
 }
