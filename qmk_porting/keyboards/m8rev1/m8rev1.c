@@ -6,7 +6,6 @@
 int main()
 {
     extern void protocol_setup();
-    extern void protocol_init();
     extern void protocol_task();
 
     platform_setup();
@@ -16,7 +15,9 @@ int main()
     keyboard_setup();
 #endif
 
-    protocol_init();
+    protocol_pre_init();
+    keyboard_init();
+    protocol_post_init();
 
     /* Main loop */
     for (;;) {
