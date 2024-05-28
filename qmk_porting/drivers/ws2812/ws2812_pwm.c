@@ -4,7 +4,7 @@
 
 /* Adapted from https://github.com/joewa/WS2812-LED-Driver_ChibiOS/ */
 
-#ifdef RGBW
+#ifdef WS2812_RGBW
 #define WS2812_CHANNELS 4
 #else
 #define WS2812_CHANNELS 3
@@ -238,7 +238,7 @@ __INTERRUPT __HIGH_CODE void TMR2_IRQHandler()
 #define WS2812_BLUE_BIT(led, bit)  WS2812_BIT((led), 0, (bit))
 #endif
 
-#ifdef RGBW
+#ifdef WS2812_RGBW
 /**
  * @brief   Determine the index in @ref ws2812_frame_buffer "the frame buffer" of a given white bit
  *
@@ -303,7 +303,7 @@ static void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t 
         ws2812_frame_buffer[WS2812_RED_BIT(led_number, bit)] = ((r >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
         ws2812_frame_buffer[WS2812_GREEN_BIT(led_number, bit)] = ((g >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
         ws2812_frame_buffer[WS2812_BLUE_BIT(led_number, bit)] = ((b >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
-#ifdef RGBW
+#ifdef WS2812_RGBW
         ws2812_frame_buffer[WS2812_WHITE_BIT(led_number, bit)] = ((w >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
 #endif
     }
@@ -320,7 +320,7 @@ void ws2812_setleds(rgb_led_t *ledarray, uint16_t leds)
     }
 
     for (uint16_t i = 0; i < leds; i++) {
-#ifdef RGBW
+#ifdef WS2812_RGBW
         ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, ledarray[i].w);
 #else
         ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, 0);
