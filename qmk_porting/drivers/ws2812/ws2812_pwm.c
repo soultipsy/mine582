@@ -15,8 +15,6 @@
 #define WS2812_DI_PIN     A10
 #endif
 
-static volatile bool ws2812_inited = false;
-
 #if WS2812_PWM_DRIVER == 1
 #define WS2812_PWM_CNT_END_REG R32_TMR1_CNT_END
 #define WS2812_DMA_CONFIG(en, start, end)       \
@@ -263,7 +261,7 @@ the memory (while the DMA is reading/writing from/to a buffer, the application c
 write/read to/from the other buffer).
  */
 
-static void ws2812_init(void)
+void ws2812_init(void)
 {
     // Initialize led frame buffer
     uint32_t i;
@@ -279,7 +277,6 @@ static void ws2812_init(void)
     WS2812_DMA_CONFIG(ENABLE, ws2812_frame_buffer[0], ws2812_frame_buffer[WS2812_BIT_N + 1]);
     WS2812_PWM_INIT(High_Level);
     WS2812_PWM_DMA_INTERRUPT_ENABLE;
-    ws2812_inited = true;
 }
 
 static void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b, uint8_t w)
@@ -312,9 +309,6 @@ static void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t 
 // Setleds for standard RGB
 void ws2812_setleds(rgb_led_t *ledarray, uint16_t leds)
 {
-    if (!ws2812_inited) {
-        ws2812_init();
-    }
     if (!ws2812_power_get()) {
         ws2812_power_toggle(true);
     }
