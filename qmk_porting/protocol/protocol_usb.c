@@ -41,7 +41,7 @@ static void send_keyboard(report_keyboard_t *report)
 
 static void send_nkro(report_nkro_t *report)
 {
-    hid_keyboard_send_report(KEYBOARD_MODE_NKRO, (uint8_t *)&report, EXKEY_IN_EP_SIZE);
+    hid_keyboard_send_report(KEYBOARD_MODE_NKRO, (uint8_t *)report, EXKEY_IN_EP_SIZE);
 }
 
 static void send_mouse(report_mouse_t *report)

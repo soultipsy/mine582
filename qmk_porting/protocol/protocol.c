@@ -48,9 +48,15 @@ void keyboard_check_protocol_mode()
 
     if (last_mode != keymap_config.nkro) {
         // send a keyboard report to trigger mode change
-        report_keyboard_t dummy_report = {};
+        if (keymap_config.nkro) {
+            report_nkro_t dummy_report = { .report_id = REPORT_ID_NKRO };
 
-        host_keyboard_send(&dummy_report);
+            host_nkro_send(&dummy_report);
+        } else {
+            report_keyboard_t dummy_report = {};
+
+            host_keyboard_send(&dummy_report);
+        }
         last_mode = keymap_config.nkro;
     }
 #endif
