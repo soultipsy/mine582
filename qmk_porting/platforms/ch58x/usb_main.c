@@ -5,6 +5,7 @@
 #include "suspend.h"
 #include "rgb_led.h"
 #include "protocol_supplement.h"
+#include "wait.h"
 
 static uint8_t usbTaskId = INVALID_TASK_ID;
 extern void suspend_power_down_quantum();
@@ -31,7 +32,15 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
                 /* Remote wakeup */
                 if (suspend_wakeup_condition()) {
                     while (!usb_remote_wakeup()) {
-                        __nop();
+#if USB_SUSPEND_WAKEUP_DELAY > 0
+                        // Some hubs, kvm switches, and monitors do
+                        // weird things, with USB device state bouncing
+                        // around wildly on wakeup, yielding race
+                        // conditions that can corrupt the keyboard state.
+                        //
+                        // Pause for a while to let things settle...
+                        wait_ms(USB_SUSPEND_WAKEUP_DELAY);
+#endif
                     }
                     break;
                 }
