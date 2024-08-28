@@ -46,7 +46,7 @@ bool shutdown_kb(bool jump_to_bootloader)
 #endif
 
 #ifdef ENCODER_ENABLE
-    pin_t encoders_pad_a[] = ENCODERS_PAD_A, encoders_pad_b[] = ENCODERS_PAD_B;
+    pin_t encoders_pad_a[] = ENCODER_A_PINS, encoders_pad_b[] = ENCODER_B_PINS;
 
     for (uint8_t i = 0; i < sizeof(encoders_pad_a) / sizeof(encoders_pad_a[0]); i++) {
         gpio_set_pin_input_low(encoders_pad_a[i]);

@@ -23,11 +23,11 @@
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A \
+#define ENCODER_A_PINS \
     {                  \
         A10            \
     }
-#define ENCODERS_PAD_B \
+#define ENCODER_B_PINS \
     {                  \
         A11            \
     }

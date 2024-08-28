@@ -46,11 +46,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A \
+#define ENCODER_A_PINS \
     {                  \
         B5             \
     }
-#define ENCODERS_PAD_B \
+#define ENCODER_B_PINS \
     {                  \
         B6             \
     }
