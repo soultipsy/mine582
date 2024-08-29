@@ -44,8 +44,10 @@ endif()
 if(NOT DEFINED ADDITIONAL_TOOLCHAIN_PATH)
     if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-elf-gcc/bin/riscv-none-elf-gcc")
         set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-elf-gcc/bin/")
+        add_compile_options(--param highcode-gen-section-name=1)
     elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/riscv-none-embed-gcc")
         set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/")
+        add_compile_options(--param highcode-gen-section-name=1)
     endif()
 endif()
 
@@ -67,7 +69,6 @@ set(CMAKE_C_STANDARD 99)
 
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
-add_compile_options(--param highcode-gen-section-name=1)
 add_compile_options(-Wall -Wno-comment -Wno-enum-compare -Wno-unused-but-set-variable)
 add_compile_options(-fdiagnostics-color=always)
 
