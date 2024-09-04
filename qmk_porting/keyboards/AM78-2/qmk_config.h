@@ -54,11 +54,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BATTERY_INDICATOR_END_INDEX   0
 
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A \
+#define ENCODER_A_PINS \
     {                  \
         B2             \
     }
-#define ENCODERS_PAD_B \
+#define ENCODER_B_PINS \
     {                  \
         B1             \
     }

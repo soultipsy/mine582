@@ -89,3 +89,9 @@ void eeprom_write_block(const void *buf, void *addr, size_t len)
         EEPROM_WRITE(QMK_EEPROM_START_POSITION + offset / EEPROM_PAGE_SIZE * EEPROM_PAGE_SIZE, buffer, sizeof(buffer));
     }
 }
+
+void eeprom_driver_format(bool erase)
+{
+    (void)erase;
+    eeprom_driver_erase();
+}

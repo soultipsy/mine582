@@ -132,11 +132,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define NO_ACTION_ONESHOT
 
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A \
+#define ENCODER_A_PINS \
     {                  \
         B22            \
     }
-#define ENCODERS_PAD_B \
+#define ENCODER_B_PINS \
     {                  \
         B0             \
     }

@@ -43,11 +43,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define HOLD_ON_OTHER_KEY_PRESS
 
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A \
+#define ENCODER_A_PINS \
     {                  \
         B2             \
     }
-#define ENCODERS_PAD_B \
+#define ENCODER_B_PINS \
     {                  \
         B1             \
     }
