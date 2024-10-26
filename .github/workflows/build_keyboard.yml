@@ -42,12 +42,6 @@ jobs:
       - name: Prepare Python requirements
         run: pip3 install -r ./mcuboot/scripts/requirements.txt
 
-      - name: Install nRF Command Line Tools
-        run: |
-          curl -L https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-24-2/nrf-command-line-tools-10.24.2_linux-amd64.tar.gz | tar xvz -C /usr/local/bin
-          echo "MERGEHEX_PATH=/usr/local/bin/mergehex" >> $GITHUB_ENV
-          echo "NRFJPROG_PATH=/usr/local/bin/nrfjprog" >> $GITHUB_ENV
-
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
